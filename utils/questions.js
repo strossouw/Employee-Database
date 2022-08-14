@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const {viewDepartment, viewRole, viewEmployee, newDepartment, newRole, newEmployee} = require('../db/queries');
+const {viewDepartment, viewRole, viewEmployee, createDepartment, createRole, createEmployee} = require('../db/queries');
 
 
 const promptUser = () => {
@@ -38,9 +38,194 @@ const promptUser = () => {
             newEmployee();
         }
     })
+}
+
+const newDepartment = () => {
+    return inquirer.prompt([
+        {
+            type: 'input',
+            name: 'id',
+            message: "Please enter the Department ID. (Required)",
+            validate: idInput => {
+                if (idInput) {
+                    return true;
+                } else console.log("Please enter the Department ID.");
+                return false;
+            }
+        },
+        {
+            type: 'input',
+            name: 'title',
+            message: "Please enter the Department name. (Required)",
+            validate: titleInput => {
+                if (titleInput) {
+                    return true;
+                } else console.log("Please enter the Department name.");
+                return false;
+            }
+        },
+        {
+            type: 'confirm',
+            name: 'confirm',
+            message: "Do you need to enter more?",
+            default: false
+        }
+    ])
+        .then(departmentData => {
+            const department = new Department(departmentData.title);
+            newDepartment(department);
+            console.log("New Department has been updated");
+            console.log(department);
+            if (departmentData.confirm) {
+                return promptUser();
+            } else {
+                return console.log("Employee Manager has been closed.");
+            }
+        });
 };
+const newRole = () => {
+    return inquirer.prompt([
+        {
+            type: 'input',
+            name: 'id',
+            message: "Please enter the Role ID. (Required)",
+            validate: idInput => {
+                if (idInput) {
+                    return true;
+                } else console.log("Please enter the Role ID.");
+                return false;
+            }
+        },
+        {
+            type: 'input',
+            name: 'title',
+            message: "Please enter the Role name. (Required)",
+            validate: titleInput => {
+                if (titleInput) {
+                    return true;
+                } else console.log("Please enter the Role name.");
+                return false;
+            }
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: "Please enter the Salary for this Role. (Required)",
+            validate: salaryInput => {
+                if (salaryInput) {
+                    return true;
+                } else console.log("Please enter the Salary for this Role.");
+                return false;
+            }
+        },
+        {
+            type: 'input',
+            name: 'deptId',
+            message: "Please enter the Department this role is part of. (Required)",
+            validate: deptIdInput => {
+                if (deptIdInput) {
+                    return true;
+                } else console.log("Please enter the Department this role is part of. ");
+                return false;
+            }
+        },
+        {
+            type: 'confirm',
+            name: 'confirm',
+            message: "Do you need to enter more?",
+            default: false
+        }
+    ])
+        .then(roleData => {
+            const role = new Role(roleData.title);
+            newRole(role);
+            console.log("New Role has been updated");
+            console.log(department);
+            if (roleData.confirm) {
+                return promptUser();
+            } else {
+                return console.log("Employee Manager has been closed.");
+            }
+        });
 
+    };
+const newEmployee = () => {
+    return inquirer.prompt([
+        {
+            type: 'input',
+            name: 'id',
+            message: "Please enter the Employee ID. (Required)",
+            validate: idInput => {
+                if (idInput) {
+                    return true;
+                } else console.log("Please enter the Employee ID");
+                return false;
+            }
+        },
+        {
+            type: 'input',
+            name: 'First Name',
+            message: "Please enter the Employee's First Name (Required)",
+            validate: firstInput => {
+                if (firstInput) {
+                    return true;
+                } else console.log("Please enter the Employee's First Name.");
+                return false;
+            }
+        },
+        {
+            type: 'input',
+            name: 'Last Name',
+            message: "Please enter the Employee's Last Name (Required)",
+            validate: lastInput => {
+                if (lastInput) {
+                    return true;
+                } else console.log("Please enter the Employee's Last Name.");
+                return false;
+            }
+        },
+        {
+            type: 'input',
+            name: 'deptId',
+            message: "Please enter the Role ID for the employee. (Required)",
+            validate: roleIdInput => {
+                if (roleIdInput) {
+                    return true;
+                } else console.log("Please enter the Role ID for the employee. ");
+                return false;
+            }
+        },
+        {
+            type: 'input',
+            name: 'deptId',
+            message: "Please enter the Department ID for the employee. (Required)",
+            validate: deptIdInput => {
+                if (deptIdInput) {
+                    return true;
+                } else console.log("Please enter the Department ID for the employee. ");
+                return false;
+            }
+        },
+        {
+            type: 'confirm',
+            name: 'confirm',
+            message: "Do you need to enter more?",
+            default: false
+        }
+    ])
+        .then(employeeData => {
+            const employee = new Employee(employeeData.title);
+            newEmployee(employee);
+            console.log("New Employee has been updated");
+            console.log(employee);
+            if (employeeData.confirm) {
+                return promptUser();
+            } else {
+                return console.log("Employee Manager has been closed.");
+            }
+        });
 
+    };
 promptUser()
 
 module.exports = {promptUser};

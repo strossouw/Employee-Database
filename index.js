@@ -10,5 +10,5 @@ db.connect(err => {
   });
 
 
-prompt = promptUser();
+
 
