@@ -207,6 +207,17 @@ const newEmployee = () => {
             }
         },
         {
+            type: 'input',
+            name: 'managerId',
+            message: "Please enter the Manager ID for the employee. (Required)",
+            validate: managerIdInput => {
+                if (managerIdInput) {
+                    return true;
+                } else console.log("Please enter the Manager ID for the employee. ");
+                return false;
+            }
+        },
+        {
             type: 'confirm',
             name: 'confirm',
             message: "Do you need to enter more?",
