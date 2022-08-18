@@ -1,6 +1,8 @@
 const inquirer = require('inquirer');
-const {viewDepartment, viewRole, viewEmployee, createDepartment, createRole, createEmployee} = require('../db/queries');
-
+const Department = require('./lib/Department');
+const Role = require('./lib/Role');
+const Employee = require("./lib/Employee");
+const {viewDepartment, viewRole, viewEmployee } = require("./commands");
 
 const promptUser = () => {
     console.log('Employee Manager'); TODO://this need to be jazzed up TODO:
@@ -9,12 +11,13 @@ const promptUser = () => {
             type: 'list',
             name: 'menu',
             message: 'What would you like to do?',
-            choices: ["View all Departments", "Add a Department", "View all Roles", "Add a role", "View all Employees", "Add an Employee"]
+            choices: ["View all Departments", "Add a Department", "View all Roles", "Add a role", "Update a role", "View all Employees", "Add an Employee"]
         },
     ])
     .then(choice => {
         if(choice.menu === "View all Departments"){
             console.log('View All Departments');
+            then
             viewDepartment();
         }
         if(choice.menu === "Add a Department"){
@@ -40,7 +43,7 @@ const promptUser = () => {
     })
 }
 
-const newDepartment = () => {
+newDepartment = () => {
     return inquirer.prompt([
         {
             type: 'input',
@@ -83,7 +86,7 @@ const newDepartment = () => {
             }
         });
 };
-const newRole = () => {
+ newRole = () => {
     return inquirer.prompt([
         {
             type: 'input',
@@ -149,7 +152,7 @@ const newRole = () => {
         });
 
     };
-const newEmployee = () => {
+ newEmployee = () => {
     return inquirer.prompt([
         {
             type: 'input',
@@ -237,6 +240,6 @@ const newEmployee = () => {
         });
 
     };
-promptUser()
+promptUser();
 
-module.exports = {promptUser};
+
