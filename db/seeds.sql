@@ -24,4 +24,12 @@ VALUES
    (1012,"Director of Sales and Acct", 100000.00, 10) ,
    (1034, "Director of CS and TP", 100000.00, 10);
 
-   
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
+  VALUES
+  ("Angela", "Kinsey", 12, 13),
+  ("Brian", "Baumgartner", 11, 13),
+  ("Michael", "Scott", 23, 1012),
+  ("Jim", "Halpert", 22, 23),
+  ("Dwight", "Schrute", 21, 23),
+  ("Andy", "Bernard", 31, 34),
+  ("Ryan", "Howard", 34, 1034);

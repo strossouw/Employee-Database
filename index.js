@@ -1,9 +1,7 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateRole } = require('./commands');
 const Department = require('./lib/Department');
-const Employee = require('./lib/Employee');
-const Role = require('./lib/Role');
+const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateRole } = require('./commands');
 const Update = require('./lib/Update');
 const db = require('./db/connection');
 
@@ -47,6 +45,17 @@ const promptUser = () => {
 const promptDepartment = () => {
     return inquirer.prompt([
         {
+            type: 'number',
+            name: 'id',
+            message: "Please enter the Department ID. (Required)",
+            validate: idInput => {
+                if (idInput) {
+                    return true;
+                } else console.log("Please enter the Department ID.");
+                return false;
+            }
+        },
+        {
             type: 'input',
             name: 'title',
             message: "Please enter the Department name. (Required)",
@@ -59,7 +68,7 @@ const promptDepartment = () => {
         }
     ])
         .then(departmentData => {
-            const department = new Department(departmentData.title);
+            const department = new Department(departmentData.id, departmentData.title);
             addDepartment(department);
             console.log("Created Department");
         });
@@ -91,8 +100,7 @@ const promptRole = () => {
         }
     ])
         .then(roleData => {
-
-            const sql = `Select departments.id AS value, departments.title AS name FROM departments`;
+            const sql = `Select departments.dept_id AS value, departments.title AS name FROM departments`;
             db.query(sql, (err, result) => {
                 if (err) throw err;
                 const departmentArray = result;
