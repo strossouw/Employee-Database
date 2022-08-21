@@ -128,7 +128,7 @@ const promptRole = () => {
                 ])
                     .then(results => {
                         console.log(results);
-                        const role = new Role(roleData.id, roleData.title, roleData.salary, results.department);
+                        const role = new Role(roleData.role_id, roleData.title, roleData.salary, results.department);
                         addRole(role);
                         console.log("Created Role");
                     });
@@ -162,10 +162,12 @@ const promptEmployee = () => {
         }
     ])
         .then(nameData => {
-            const sql = `Select roles.role_id AS value, roles.title AS name FROM roles`;
+            const sql = `Select roles.role_id, roles.title FROM roles`;
             db.query(sql, (err, result) => {
+                
                 if (err) throw err;
-                const roleArray = result;
+                const roleArray = result.map(({role_id, title}) => ({value: role_id, name: title }) );
+                console.log(roleArray);
 
                 inquirer.prompt([
                     {
@@ -176,10 +178,11 @@ const promptEmployee = () => {
                     }
                 ])
                     .then(roleData => {
-                        const sql = `Select employees.emp_id AS value, CONCAT(employees.first_name, ' ', employees.last_name) AS name FROM employees`;
+                        const sql = `Select employees.emp_id, CONCAT(employees.first_name, ' ', employees.last_name) FROM employees`;
                         db.query(sql, (err, result) => {
                             if (err) throw err;
-                            const empArray = result;
+                            const empArray = result.map(({manager_id, name}) => ({value: manager_id, name: name }) );
+                            console.log(empArray);
 
                             inquirer.prompt([
                                 {
@@ -190,7 +193,8 @@ const promptEmployee = () => {
                                 }
                             ])
                                 .then(results => {
-                                    const employee = new Employee(nameData.first_name, nameData.last_name, roleData.role_id, results.emp_id);
+                                    const employee = new Employee(nameData.first_name, nameData.last_name, roleData.role_id, results.role_id, result.manager_id);
+                                    console.log(employee);
                                     addEmployee(employee);
                                     console.log("Created Employee");
                                 });

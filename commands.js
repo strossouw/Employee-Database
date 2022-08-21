@@ -58,7 +58,7 @@ const addRole = role => {
 
 const addEmployee = employee => {
     db.execute(
-        `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${employee.firstName}", "${employee.lastName}", "${employee.roleID}", "${employee.managerID}");`,
+        `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${employee.first_name}", "${employee.last_name}", "${employee.role_id}", "${employee.manager_id}");`,
         );
     viewEmployees();
 };
