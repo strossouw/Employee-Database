@@ -1,6 +1,7 @@
-const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const Department = require('./lib/Department');
+const Role = require("./lib/Role");
+const Employee = require("./lib/Employee");
 const { viewDepartments, viewRoles, viewEmployees, addDepartment, addRole, addEmployee, updateRole } = require('./commands');
 const Update = require('./lib/Update');
 const db = require('./db/connection');
@@ -77,6 +78,17 @@ const promptDepartment = () => {
 const promptRole = () => {
     return inquirer.prompt([
         {
+            type: 'number',
+            name: 'id',
+            message: "Please enter the Role ID. (Required)",
+            validate: roleIdInput => {
+                if (roleIdInput) {
+                    return true;
+                } else console.log("Please enter the Role ID.");
+                return false;
+            }
+        },
+        {
             type: 'input',
             name: 'title',
             message: "Please enter the Role name. (Required)",
@@ -100,10 +112,11 @@ const promptRole = () => {
         }
     ])
         .then(roleData => {
-            const sql = `Select departments.dept_id AS value, departments.title AS name FROM departments`;
+            console.log(roleData);
+            const sql = `Select departments.dept_id, departments.title FROM departments`;
             db.query(sql, (err, result) => {
                 if (err) throw err;
-                const departmentArray = result;
+                const departmentArray = result.map(({dept_id, title}) => ({value: dept_id, name: title }) );
 
                 inquirer.prompt([
                     {
@@ -114,7 +127,8 @@ const promptRole = () => {
                     }
                 ])
                     .then(results => {
-                        const role = new Role(roleData.title, roleData.salary, results.department);
+                        console.log(results);
+                        const role = new Role(roleData.id, roleData.title, roleData.salary, results.department);
                         addRole(role);
                         console.log("Created Role");
                     });
@@ -162,7 +176,7 @@ const promptEmployee = () => {
                     }
                 ])
                     .then(roleData => {
-                        const sql = `Select employees.id AS value, CONCAT(employees.first_name, ' ', employees.last_name) AS name FROM employees`;
+                        const sql = `Select employees.emp_id AS value, CONCAT(employees.first_name, ' ', employees.last_name) AS name FROM employees`;
                         db.query(sql, (err, result) => {
                             if (err) throw err;
                             const empArray = result;

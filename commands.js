@@ -27,11 +27,12 @@ const viewRoles = () => {
 
 const viewEmployees = () => {
     db.execute(
-        `SELECT employees.emp_id AS "Employee ID" , employees.first_name AS "First Name", employees.last_name AS "Last Name", roles.title AS "Job Title", roles.salary AS "Salary", departments.title AS "Department Name"
-        FROM employees 
+        `SELECT employees.emp_id AS id, employees.first_name AS first_name, employees.last_name AS last_name, roles.title AS job_title, roles.salary AS salary, departments.title AS department_name, 
+		CONCAT(manager.first_name, ' ', manager.last_name) AS Manager
+        FROM employees
         LEFT JOIN roles ON employees.role_id = roles.role_id 
-        AND employees.role_id = roles.role_id
-        LEFT JOIN departments ON roles.dept_id = departments.dept_id;`
+        LEFT JOIN departments ON roles.dept_id = departments.dept_id
+        LEFT JOIN employees manager ON manager.manager_id = employees.manager_id`
     ,
         function (err, results) {
             const table = cTable.getTable(results);
@@ -50,7 +51,7 @@ const addDepartment = department => {
 
 const addRole = role => {
     db.execute(
-        `INSERT INTO roles (title, salary, department_id) VALUES ("${role.title}", "${role.salary}", "${role.departmentID}");`,
+        `INSERT INTO roles (role_id, title, salary, dept_id) VALUES (${role.id}, "${role.title}", ${role.salary}, ${role.dept_id});`,
         );
     viewRoles();
 };
