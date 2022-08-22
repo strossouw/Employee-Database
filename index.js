@@ -112,10 +112,9 @@ const promptRole = () => {
         }
     ])
         .then(roleData => {
-            console.log(roleData);
             const sql = `Select departments.dept_id, departments.title FROM departments`;
             db.query(sql, (err, result) => {
-                if (err) throw err;
+                if (err) throw err; //this is the one that works.
                 const departmentArray = result.map(({dept_id, title}) => ({value: dept_id, name: title }) );
 
                 inquirer.prompt([
@@ -128,7 +127,7 @@ const promptRole = () => {
                 ])
                     .then(results => {
                         console.log(results);
-                        const role = new Role(roleData.role_id, roleData.title, roleData.salary, results.department);
+                        const role = new Role(roleData.id, roleData.title, roleData.salary, results.department);
                         addRole(role);
                         console.log("Created Role");
                     });
@@ -165,8 +164,9 @@ const promptEmployee = () => {
             const sql = `Select roles.role_id, roles.title FROM roles`;
             db.query(sql, (err, result) => {
                 
-                if (err) throw err;
+                if (err) throw err; //this is the one that doesn't work
                 const roleArray = result.map(({role_id, title}) => ({value: role_id, name: title }) );
+               // result.map(({dept_id, title}) => ({value: dept_id, name: title }) );
                 console.log(roleArray);
 
                 inquirer.prompt([
@@ -178,10 +178,10 @@ const promptEmployee = () => {
                     }
                 ])
                     .then(roleData => {
-                        const sql = `Select employees.emp_id, CONCAT(employees.first_name, ' ', employees.last_name) FROM employees`;
+                        const sql = `Select employees.emp_id AS value, CONCAT(employees.first_name, ' ', employees.last_name) AS name FROM employees`;
                         db.query(sql, (err, result) => {
                             if (err) throw err;
-                            const empArray = result.map(({manager_id, name}) => ({value: manager_id, name: name }) );
+                            const empArray = result.map(({emp_id}) => ({value: emp_id }) );
                             console.log(empArray);
 
                             inquirer.prompt([
@@ -193,7 +193,7 @@ const promptEmployee = () => {
                                 }
                             ])
                                 .then(results => {
-                                    const employee = new Employee(nameData.first_name, nameData.last_name, roleData.role_id, results.role_id, result.manager_id);
+                                    const employee = new Employee(nameData.first_name, nameData.last_name, roleData.role_id, results.manager_id);
                                     console.log(employee);
                                     addEmployee(employee);
                                     console.log("Created Employee");
@@ -205,7 +205,7 @@ const promptEmployee = () => {
 };
 
 const promptUpdate = () => {
-    const sql = `Select employees.id AS value, CONCAT(employees.first_name, ' ', employees.last_name) AS name FROM employees`;
+    const sql = `Select employees.emp_id AS value, CONCAT(employees.first_name, ' ', employees.last_name) AS name FROM employees`;
     db.query(sql, (err, result) => {
         if (err) throw err;
         const empArray = result;
